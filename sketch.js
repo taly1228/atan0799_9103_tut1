@@ -2,6 +2,7 @@ let scaleFactor;
 let breathingSpeed = 0.02; // Breathing rhythm speed
 let baseAlpha = 200;       // Maximum opacity
 let baseWeight = 3;        // Maximum stroke weight
+let delayFrames = 20;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -15,15 +16,15 @@ function draw() {
   rotate(radians(-30));
   translate(-430, -470);
 
-  // Calculate breathing modulation
-  let breath = sin(frameCount * breathingSpeed);         // [-1, 1]
-  let alpha = map(breath, -1, 1, 80, baseAlpha);          // Opacity modulation
-  let weight = map(breath, -1, 1, 0.5, baseWeight);       // Stroke weight modulation
-
-  drawModules(alpha, weight); // Render all modules with breathing effect
+  for (let i = 0; i < modules.length; i++) {
+    let breath = sin((frameCount - i * delayFrames) * breathingSpeed);
+    let alpha = map(breath, -1, 1, 80, baseAlpha);// [-1, 1]
+    let weight = map(breath, -1, 1, 0.5, baseWeight); // Stroke weight modulation
+    modules[i](alpha, weight);
+  }
 }
 
-function drawModules(alpha, weight) {
+function module1(alpha, weight) {
 // Thick 5
   push(); 
   translate(189, 343); 
@@ -34,7 +35,8 @@ function drawModules(alpha, weight) {
   translate(198, 360); 
   drawLinGroup(0, 0, 320, 2, 1, weight, alpha); 
   pop();
-
+}
+function module2(alpha, weight) {
 // Thick 6
   push(); 
   translate(445, 430); 
@@ -45,13 +47,15 @@ function drawModules(alpha, weight) {
   translate(440, 436); 
   drawLinGroup(0, 0, 70, 4, 1, weight, alpha); 
   pop();
-
+}
+function module3(alpha, weight) {
 // Thick 7
   push(); 
   translate(130, 550); 
   drawLinGroup(0, 0, 595, 2, 1, weight, alpha); 
   pop();
-
+}
+function module4(alpha, weight) {
 // Thick 8
   push(); 
   translate(432, 450); 
@@ -62,7 +66,8 @@ function drawModules(alpha, weight) {
   translate(135, 489); 
   drawLinGroup(0, 0, 100, 3, 1, weight, alpha); 
   pop();
-
+}
+function module5(alpha, weight) {
 // Thick 1
   push(); 
   translate(110, 383); 
@@ -73,7 +78,8 @@ function drawModules(alpha, weight) {
   translate(115, 392); 
   drawLinGroup(0, 0, 80, 3, 1, weight, alpha); 
   pop();
-
+}
+function module6(alpha, weight) {
 // Thick 2
   push(); 
   translate(515, 315); 
@@ -84,7 +90,8 @@ function drawModules(alpha, weight) {
   translate(517, 350); 
   drawLinGroup(0, 0, 170, 6, 1, weight, alpha); 
   pop();
-
+}
+function module7(alpha, weight) {
 // Thick 3
   push(); 
   translate(448, 316); 
@@ -100,7 +107,8 @@ function drawModules(alpha, weight) {
   translate(411, 380); 
   drawLinGroup(0, 0, 70, 5, 1, weight, alpha); 
   pop();
-
+}
+function module8(alpha, weight) {
 //Thick 4
   push(); 
   translate(190, 348); 
@@ -121,7 +129,8 @@ function drawModules(alpha, weight) {
   translate(246, 452); 
   drawLinGroup(0, 0, 10, 6, 1, weight, alpha); 
   pop();
-
+}
+function module9(alpha, weight) {
 //Thin 1
   push(); 
   translate(125, 448); 
@@ -132,7 +141,8 @@ function drawModules(alpha, weight) {
   translate(125, 525); 
   drawLinGroup(0, 0, 600, 22, 2.5, weight * 0.4, alpha); 
   pop();
-
+}
+function module10(alpha, weight) {
 //Thin 2
   push(); 
   translate(137, 320); 
@@ -148,7 +158,8 @@ function drawModules(alpha, weight) {
   translate(212, 455); 
   drawTrapezoidLines(0, 18, 34, 52, 0, 20, 3, alpha); 
   pop();
-
+}
+function module11(alpha, weight) {
 //Trapezoid3
   push(); 
   translate(190, 356); 
@@ -159,7 +170,8 @@ function drawModules(alpha, weight) {
   translate(172, 320); 
   drawTrapezoidLines(0, 103, 14, 85, 0, 9, 3.2, alpha); 
   pop();
-
+}
+function module12(alpha, weight) {
 //Trapezoid2
   push(); 
   translate(110, 320); 
@@ -175,7 +187,8 @@ function drawModules(alpha, weight) {
   translate(105, 354); 
   drawTrapezoidLines(0, 145, 0, 120, 0, 12, 3.5, alpha); 
   pop();
-
+}
+function module13(alpha, weight) {
 //Trapezoid1
   push(); 
   translate(135, 440); 
@@ -198,14 +211,29 @@ function drawModules(alpha, weight) {
   pop();
 }
 
+let modules = [
+  module1,
+  module2,
+  module3,
+  module4,
+  module5,
+  module6,
+  module7,
+  module8,
+  module9,
+  module10,
+  module11,
+  module12,
+  module13,
+];
+
 // Draw groups of parallel lines with breathing-modulated opacity and stroke weight
 function drawLinGroup(x, y, len, count, spacing, weight, baseAlpha = 255) {
   strokeWeight(weight);
   for (let i = 0; i < count; i++) {
     let alpha = map(i, 0, count - 1, 0, baseAlpha);
     stroke(0, alpha);
-    let yOffset = y + i * spacing;
-    line(x, yOffset, x + len, yOffset);
+    line(x, y + i * spacing, x + len, y + i * spacing);
   }
 }
 
